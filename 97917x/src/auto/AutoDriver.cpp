@@ -13,6 +13,7 @@ void moniterFunc(){
 }
 //主代理
 void autonomous(){
+  autonomousChooser();
   AutoThread = autofp;//implicit object creation
   vex::thread monitor(moniterFunc);;
   monitor.detach();
