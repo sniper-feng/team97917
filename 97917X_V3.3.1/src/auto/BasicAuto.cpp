@@ -249,3 +249,35 @@ void pushToHighest() {
     wait(5);
   }
 }
+
+
+
+
+
+/*--------------------------intake------------------------*/
+
+
+
+static void intakeSpinIn(){
+  intake_set_voltage(12000);
+}
+static void intakeSpinOut(){
+  intake_set_voltage(-12000);
+}
+static vex::thread intakeThread;
+void enableIntake_In(){
+  intakeThread.interrupt(); 
+  intakeThread = thread(intakeSpinIn);
+  intakeThread.detach();
+}
+void enableIntake_Out(){
+  intakeThread.interrupt();
+   intakeThread = thread(intakeSpinOut);
+  intakeThread.detach();
+  }
+void disableIntake(){
+  intakeThread.interrupt();
+  intake_set_voltage(0);
+}
+
+
