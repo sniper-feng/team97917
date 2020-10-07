@@ -268,10 +268,16 @@ void pushToMaxium(){
 /*---------------------------Intake--------------------*/
 //Use MultipleThreading
 static void intakeSpinIn(){
-  intake_set_voltage(12000);
+  while(1){
+  handle_intake(true, false, false);
+  wait(20);
+  }
 }
 static void intakeSpinOut(){
-  intake_set_voltage(-12000);
+  while(1){
+  handle_intake(false, true, false);
+  wait(20);
+  }
 }
 static vex::thread intakeThread;
 void enableIntake_In(){
