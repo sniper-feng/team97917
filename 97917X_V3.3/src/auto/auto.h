@@ -19,15 +19,15 @@ void stop();
 // Stuck during the Movement  to create a linear control
 void spinByAbsoluteAngle(double target,int timeOutMilli , int forward=0,int maxSpeed=100);
 void spinByRelativeAngle(double angle ,int timeOutMilli,int forward=0 , int maxSpeed=100);
+void spinByEncoder_target(int target,int speed,int timeOutMilli);
+void spinByEncoder_degree(int degree,int speed,int timeOutMilli);
 /*--------------------Swing------------------*/
 void swingReset();
-void rotateSwingByEncoder(double speed, int target);
 /*--------------------Push-------------------*/
 void pushToHighest();
-/*-------------------Intake------------------*/
 
-void enableIntake();
-void disableIntake();
+
+
 
 
 

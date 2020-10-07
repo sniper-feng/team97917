@@ -136,20 +136,19 @@ double err;
 double output;
 
 
-double err_sbaa =0;
+
 // target: the angle based on the robot's angle when booted.
 void spinByAbsoluteAngle(double target,int timeOutMilli , int forward,int maxSpeed){
  vex::timer time;
  time.reset();
-  err_sbaa = target - gyro_z.value(rotationUnits::deg);
+ err = target-gyro_z.value(rotationUnits::deg);
  while(time.time(msec) < timeOutMilli){
-   Brain.Screen.printAt(0,150,"Spinning");
   //linear p controller
   // Line Formula : Power = currentErr * (-(maxSpeed / err)) + maxSpeed
   output = (target-gyro_z.value(rotationUnits::deg)) * (-maxSpeed/err) + maxSpeed;
-  move(forward, output);//为正右转
-  if(abs(target-gyro_z.value(rotationUnits::deg)) < 4)break;
-  }
+  move(forward, output);
+  if(abs(target-gyro_z.value(rotationUnits::deg))<4)break;
+ }
 }
 
 
@@ -161,10 +160,35 @@ void spinByAbsoluteAngle(double target,int timeOutMilli , int forward,int maxSpe
 
 
 
+
+
 void spinByRelativeAngle(double angle ,int timeOutMilli,int forward, int maxSpeed){
-double
+  double target;
   target = angle +gyro_z.value(rotationUnits::deg);
   spinByAbsoluteAngle(target, timeOutMilli,forward,maxSpeed);
+}
+
+
+
+void spinByEncoder_target(int target,int speed,int timeOutMilli){
+
+  int temp = get_move_enc();
+  vex::timer time;
+  time.reset();
+  while(time.time(msec) < timeOutMilli){
+    move(0,speed);
+    if(abs(get_move_enc()-temp)>target)break;
+  }
+  move_stop();
+  //int output = get_move_enc() - temp;
+}
+
+void spinByEncoder_degree(int degree,int speed,int timeOutMilli){
+  int target;
+  double wheelbase = 28.8;
+  double Wheeldiameter = 10.16;
+  target = wheelbase/Wheeldiameter*degree*(900/360);
+  spinByEncoder_target(target,speed,timeOutMilli);
 }
 
 
@@ -177,12 +201,7 @@ void swingReset() {
   swing_set_voltage(-1500);
 }
 
-void rotateSwingByEncoder(double speed, int target){
-  int temp = get_move_enc();
-  while(abs(get_move_enc()-temp) <= target)
-  swingRotate(speed);
-  move_stop();
-}
+
 
 
 
@@ -229,25 +248,4 @@ void pushToHighest() {
 
     wait(5);
   }
-}
-//If You Want to Call This , Call it in a parallel thread!
-void pushToMaxium(){
-  timer time;
-  while(time.time(msec) < 2000)
-  handle_push(true,false,false);
-
-}
-
-
-
-
-
-
-/*---------------------------Intake--------------------*/
-
-void enableIntake(){
-  intake_set_voltage(5000);
-}
-void disableIntake(){
-  intake_set_voltage(0);
 }
