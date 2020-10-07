@@ -59,8 +59,9 @@ void func(void){
         autonomous();
 }
 bool pressed = false;
-int autoCounter = 0;
+  int autoCounter = 0;
 int main() {
+
   gyro_z.calibrate();
   Brain.Screen.printAt(0,190,"Wait..");
   vex::thread th_control(usercontrol);
@@ -84,14 +85,14 @@ int main() {
       
       if(AUTOLIMIT > autoCounter){
         Brain.Screen.printAt(0,210,"Auto");
-         ++autoCounter;
+       ++autoCounter;
         autonomous();
       }
       else{
         Brain.Screen.printAt(0,230,"Auto Exectution Already Completed");
       }
     }
-    else if (!( bumperControl.pressing() || Controller.ButtonX.pressing() ) && pressed) 
+    else if (!( bumperControl.pressing() || Controller.ButtonX.pressing() ) && pressed) {
 
     pressed = false;
     }
