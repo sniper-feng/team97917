@@ -1,0 +1,1 @@
+void auto_role_one_2_(){}
