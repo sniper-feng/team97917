@@ -65,13 +65,16 @@ void unlock_robot(){
 
 
 
+/*-------------------------------General------------------*/
+int distanceToTick(double centimeter){
+  return centimeter / (10.16/*轮子直径*/ * 3.1415) * 900;
+}
 
 
 
 
 
-
-/*--------------------Motor-----------------*/
+/*---------------------------------------Motor-----------------*/
 
 
 
@@ -136,38 +139,21 @@ double err;
 double output;
 
 
-
+double err_sbaa =0;
 // target: the angle based on the robot's angle when booted.
 void spinByAbsoluteAngle(double target,int timeOutMilli , int forward,int maxSpeed){
  vex::timer time;
  time.reset();
- err = target-gyro_z.value(rotationUnits::deg);
+  err_sbaa = target - gyro_z.value(rotationUnits::deg);
  while(time.time(msec) < timeOutMilli){
+   Brain.Screen.printAt(0,150,"Spinning");
   //linear p controller
   // Line Formula : Power = currentErr * (-(maxSpeed / err)) + maxSpeed
   output = (target-gyro_z.value(rotationUnits::deg)) * (-maxSpeed/err) + maxSpeed;
-  move(forward, output);
-  if(abs(target-gyro_z.value(rotationUnits::deg))<4)break;
- }
+  move(forward, output);//为正右转
+  if(abs(target-gyro_z.value(rotationUnits::deg)) < 4)break;
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-void spinByRelativeAngle(double angle ,int timeOutMilli,int forward, int maxSpeed){
-  double target;
-  target = angle +gyro_z.value(rotationUnits::deg);
-  spinByAbsoluteAngle(target, timeOutMilli,forward,maxSpeed);
-}
-
 
 
 void spinByEncoder_target(int target,int speed,int timeOutMilli){
@@ -193,6 +179,19 @@ void spinByEncoder_degree(int degree,int speed,int timeOutMilli){
 
 
 
+
+
+
+
+
+void spinByRelativeAngle(double angle ,int timeOutMilli,int forward, int maxSpeed){
+double
+  target = angle +gyro_z.value(rotationUnits::deg);
+  spinByAbsoluteAngle(target, timeOutMilli,forward,maxSpeed);
+}
+
+
+
 /*------------------------------------Swing-------------------------------*/
 void swingReset() {
   swing_set_voltage(-12800); // push hold out
@@ -201,7 +200,12 @@ void swingReset() {
   swing_set_voltage(-1500);
 }
 
-
+void rotateSwingByEncoder(double speed, int target){
+  int temp = get_move_enc();
+  while(abs(get_move_enc()-temp) <= target)
+  swingRotate(speed);
+  move_stop();
+}
 
 
 
@@ -249,8 +253,6 @@ void pushToHighest() {
     wait(5);
   }
 }
-
-
 //If You Want to Call This , Call it in a parallel thread!
 void pushToMaxium(){
   timer runtime , intake;
@@ -260,10 +262,11 @@ void pushToMaxium(){
 
 
 
-/*--------------------------intake------------------------*/
 
 
 
+/*---------------------------Intake--------------------*/
+//Use MultipleThreading
 static void intakeSpinIn(){
   intake_set_voltage(12000);
 }
@@ -285,5 +288,3 @@ void disableIntake(){
   intakeThread.interrupt();
   intake_set_voltage(0);
 }
-
-
