@@ -251,6 +251,12 @@ void pushToHighest() {
 }
 
 
+//If You Want to Call This , Call it in a parallel thread!
+void pushToMaxium(){
+  timer runtime , intake;
+  while(runtime.time(msec) < 3000)
+  handle_push(true,false,false);
+}
 
 
 
