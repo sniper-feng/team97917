@@ -1,0 +1,35 @@
+#include "Globals/Globals.h"
+
+void pre_auton(void) {
+  all_motor_brake();
+
+  switch (ROBOT) {
+  case R_Normal:
+    Controller.Screen.print("R_Normal");
+    break;
+  case R_74000M:
+    Controller.Screen.print("R_74000M");
+    break;
+  case R_74000V:
+    Controller.Screen.print("74000V~~~");
+    #ifdef bot_97917G
+    Controller.Screen.print("97917G~~~");
+    #elif defined(bot_97917A)
+    Controller.Screen.print("97917A~~~");
+    #elif defined(bot_97917F)
+    Controller.Screen.print("97917F~~~");
+    #endif
+    break;
+  case R_74000P:
+    Controller.Screen.print("R_74000P");
+    break;
+  case R_74000F:
+    Controller.Screen.print("R_74000F");
+    break;
+  case R_77921F:
+    Controller.Screen.print("R_77921F");
+    break;
+  default:
+    break;
+  }
+}
